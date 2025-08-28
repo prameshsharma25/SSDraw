@@ -273,7 +273,8 @@ def main():
              -i INPUT, --input INPUT
                         name of input script
              -o OUTPUT, --output OUTPUT
-                        name of output directory""")
+                        name of output directory"""
+        )
 
     args, parser = get_args()
 

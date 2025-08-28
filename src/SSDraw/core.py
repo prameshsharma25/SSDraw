@@ -86,7 +86,7 @@ def gap_sequence(seq: T.Any, extra_gaps: T.List[int]) -> T.Any:
     new_seq = seq
     if extra_gaps[1] != 0:
         new_seq = new_seq[: -extra_gaps[1]]
-    return new_seq[extra_gaps[0]:]
+    return new_seq[extra_gaps[0] :]
 
 
 def NormalizeData(data: np.ndarray) -> np.ndarray:
@@ -867,163 +867,6 @@ def read_pdb(id: str, args: argparse.Namespace) -> T.Tuple[T.List[float], str]:
     return bfactors, pdbseq
 
 
-description = """
-----------------
-
-SSDraw is a program that generates publication-quality protein secondary structure diagrams from three-dimensional protein structures. To depict relationships between secondary structure and other protein features, diagrams can be colored by conservation score, B-factor, or custom scoring.
-
-SSDraw also has a colab notebook available at https://github.com/ethanchen1301/SSDraw/blob/main/SSDraw.ipynb
-
-
-
-Installation:
-
-SSDraw requires the biopython module:
-        pip install biopython
-
-SSDraw also requires the DSSP program to be installed in order to generate secondary structure annotations.
-        sudo apt-get install dssp
-
-Alternatively, you can install DSSP either through conda (conda install -c salilab dssp), or you can follow the instructions on their github page to make a local installation: 
-https://github.com/cmbi/dssp.
-
-
-
-Instructions:
-SSDraw requires 4 arguments:
-1. --fasta: the file name sequence or alignment file in fasta format.
-2. --name: the id of the sequence in the fasta file corresponding to your protein of interest.
-3. --pdb: the file name of the pdb file of your protein
-4. --output: the output file name to use
-
-Example 1:
-    python3 ../SSDraw.py --fasta 1ndd.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_out
-        
-Coloring options:
-SSDraw uses a gradient to color each position in the alignment by a certain score. The user can choose which scoring system to use, and they can also choose which colormap.
-
-Scoring: 
--conservation_score: score each position in the alignment by conservation score.
--bfactor: score each residue in the pdb by B-factor
--scoring_file: score each residue by a custom scoring file prepared by the user
--mview: color each residue by the mview coloring system
-
-Example 2: Score by conservation
-    python3 ../SSDraw.py --fasta aligned.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_conservation -conservation_score
-
-Example 3: Score by B-factor
-    python3 ../SSDraw.py --fasta 1ndd.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_bfactor -bfactor
-
-Choosing a colormap:
-The default colormap for SSDraw is inferno. The user can select one of the matplotlib library color maps or simply list a set of colors they'd like to use with the --color_map option. Alternatively, the user can select a single color with the --color option and SSDraw will use that color on the whole image.
-
-Example 4: Custom scoring file with custom color map
-    python3 ../SSDraw.py --fasta 2kdl.fasta --name 2kdl --pdb 2kdl.pdb --output 2kdl_out --scoring_file 2kdl_scoring.txt --color_map black cyan  
-
-DSSP files:
-Normally, SSDraw will generate a DSSP annotation from the PDB file, but if you have a DSSP file you would like to use, you can upload it and input the file name in Options.
-
---start and --end:
-If you want SSDraw to draw only a portion of your alignment, you can specify the start and/or end points using the --start and --end options respectively. The argument for these options correspond to the index of the alignment position, not to the residue position numbers.
-
-Example 5: Choose subregion of alignment to run SSDraw on
-    python3 ../SSDraw.py --fasta aligned.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_conservation_cropped -conservation_score --start 80 --end 132
-
-Running on multiple pdbs:
-In order to rapidly generate multiple images with SSDraw, we recommend writing shell scripts comprised of commands like those shown in the above examples. For examples of such shell scripts, see one of the shell scripts in /figures/.
-----------------
-
-"""
-
-
-def get_args(
-    args: T.Optional[T.List[str]] = None,
-) -> T.Tuple[argparse.Namespace, argparse.ArgumentParser]:
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=description,
-        epilog="",
-    )
-    parser.add_argument(
-        "-f",
-        "--fasta",
-        help="(required) sequence/alignment file in fasta format",
-    )
-    parser.add_argument("-p", "--pdb", help="(required) pdb file")
-    parser.add_argument(
-        "-n",
-        "--name",
-        help="(required) id of the protein in the alignment file",
-    )
-    parser.add_argument(
-        "-o", "--output", help="(required) name for output file"
-    )
-    parser.add_argument(
-        "--SS",
-        default=None,
-        help="secondary structure annotation in DSSP or .horiz format. If this option is not provided, SSDraw will compute secondary structure from the given PDB file with DSSP.",
-    )
-    parser.add_argument(
-        "--chain_id",
-        default="A",
-        help="chain id to use in pdb. Defaults to chain A.",
-    )
-    parser.add_argument(
-        "--color_map",
-        default=["inferno"],
-        nargs="*",
-        help="color map to use for heat map",
-    )
-    parser.add_argument(
-        "--scoring_file",
-        default=None,
-        help="custom scoring file for alignment",
-    )
-    parser.add_argument(
-        "--color",
-        default="white",
-        help="color for the image. Can be a color name (eg. white, black, green), or a hex code",
-    )
-    parser.add_argument(
-        "-conservation_score",
-        action="store_true",
-        help="score alignment by conservation score",
-    )
-    parser.add_argument(
-        "--output_file_type",
-        default="png",
-        help="output file type. Options: png, ps, eps, tif, svg",
-    )
-    parser.add_argument(
-        "-bfactor", action="store_true", help="score by B-factor"
-    )
-    parser.add_argument(
-        "-mview", action="store_true", help="color by mview color map"
-    )
-    parser.add_argument(
-        "--dpi", default=600, type=int, help="dpi to use for final plot"
-    )
-    parser.add_argument(
-        "--ticks", default=0, type=int, help="set ticks at every nth position"
-    )
-    parser.add_argument("--start", default=0, type=int)
-    parser.add_argument("--end", default=0, type=int)
-    parser.add_argument(
-        "--dssp_exe",
-        default="mkdssp",
-        help="The path to your dssp executable. Default: mkdssp",
-    )
-    parser.add_argument(
-        "--consurf",
-        default="",
-        help="consurf or rate4site file to color image with. If rate4site file is given, SSDraw will convert raw scores to grades.",
-    )
-
-    args = parser.parse_args(args)
-
-    return args, parser
-
-
 def initialize(
     args: T.Optional[argparse.Namespace] = None,
     parser: T.Optional[argparse.ArgumentParser] = None,
@@ -1044,13 +887,6 @@ def initialize(
     T.List[str],
     T.List[T.Tuple[int, int]],
 ]:
-    if args == None:
-        args, parser = get_args()
-
-    if not args.fasta or not args.pdb or not args.output or not args.name:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
     # preface run
     id = args.name
     chain_id = args.chain_id
@@ -1125,7 +961,7 @@ def SSDraw(
         ss_break,
         ss_order,
         ss_bounds,
-    ) = initialize()
+    ) = initialize(args)
     nlines = 1
 
     # Parse color and scoring args
@@ -1272,7 +1108,3 @@ def SSDraw(
         dpi=args.dpi,
         transparent=True,
     )
-
-
-if __name__ == "__main__":
-    SSDraw()

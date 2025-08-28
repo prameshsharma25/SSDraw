@@ -1,17 +1,15 @@
-FROM continuumio/miniconda3
+FROM python:3.11-slim
+
+ARG VERSION=0.1.3
 
 WORKDIR /app
 
-COPY src/ ./src
-COPY requirements.txt ./
-COPY Makefile ./
-
-RUN pip3 install -r requirements.txt
-
 RUN apt-get update && apt-get install -y \
     dssp \
-    make
+    make \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN make format
+RUN pip install --upgrade pip
+RUN pip install ssdraw==${VERSION}
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["ssdraw"]

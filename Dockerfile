@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y \
 
 RUN make format
 
-ENTRYPOINT ["python", "src/SSDraw.py"]
+ENTRYPOINT ["python"]

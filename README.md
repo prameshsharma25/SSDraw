@@ -101,7 +101,7 @@ run_multiple_pdbs_on_one_msa.py will run SSDraw for multiple pdbs from a single 
 
 ## Running with Docker
 
-You can use Docker to run SSDraw without installing dependencies on your system.
+You can use Docker to run SSDraw without installing dependencies on your system. However, you must have Docker Desktop for your OS installed. You can find that [here](https://www.docker.com/get-started/).
 
 ### 1. Build the Docker image
 
@@ -115,7 +115,7 @@ Make sure your input files (FASTA, PDB, etc.) are in your current directory.
 Then run:
 
 ```sh
-docker run --rm -v "$PWD":/app ssdraw-image --fasta your.fasta --name your_id --pdb your.pdb --output output_name
+docker run --rm -v "$PWD":/app ssdraw-image src/SSDraw.py --fasta your.fasta --name your_id --pdb your.pdb --output output_name
 ```
 
 - Replace `your.fasta`, `your_id`, `your.pdb`, and `output_name` with your actual file names and sequence ID.
@@ -124,10 +124,24 @@ docker run --rm -v "$PWD":/app ssdraw-image --fasta your.fasta --name your_id --
 #### Example
 
 ```sh
-docker run --rm -v "$PWD":/app ssdraw-image --fasta examples/1ndd.fasta --name 1ndd --pdb examples/1ndd.pdb --output 1ndd_out
+`docker run --rm -v "$PWD":/app ssdraw-image src/SSDraw.py src/SSDraw.py --fasta examples/1ndd.fasta --name 1ndd --pdb examples/1ndd.pdb --output 1ndd_out --dpi 1000`
 ```
 
 **Note:**  
 The `-v "$PWD":/app` option mounts your current directory into the container, so SSDraw can access your files and save outputs locally.  
 You can pass any SSDraw command-line options as usual after the image
+
+### 3. Run SSDraw with multiple PDBs
+Following the format in examples/example_run.txt, you're able to utilize SSDraw across several PDBs which builds a composite image of secondary structures.
+
+```sh
+docker run --rm -v "$PWD":/app ssdraw-image src/run_multiple_pdbs_on_one_msa.py -i run.txt -o output_name
+```
+
+#### Example
+
+```sh
+docker run --rm -v "$PWD":/app ssdraw-image src/run_multiple_pdbs_on_one_msa.py -i examples/example_run.txt -o ubiquitin_stacked
+```
+
 

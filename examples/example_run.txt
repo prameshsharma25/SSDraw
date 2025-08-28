@@ -4,26 +4,26 @@
 # name of one fasta file
 FASTA
 {
-    ../figures/ubiquitin/input/aligned.fasta
+    ./figures/ubiquitin/input/aligned.fasta
 }
 
 # name of pdb files
 PDB
 {
-    ../figures/ubiquitin/input/1ubq.pdb
-    ../figures/ubiquitin/input/1ndd.pdb
-    ../figures/ubiquitin/input/2n1v.pdb
-    ../figures/ubiquitin/input/2l7r.pdb
-    ../figures/ubiquitin/input/1z2m.pdb
-    ../figures/ubiquitin/input/1oqy.pdb
-    ../figures/ubiquitin/input/1p1a.pdb
-    ../figures/ubiquitin/input/2bwf.pdb
-    ../figures/ubiquitin/input/1yqb.pdb
-    ../figures/ubiquitin/input/4k95.pdb
-    ../figures/ubiquitin/input/1vcb.pdb
-    ../figures/ubiquitin/input/1wh3.pdb
-    ../figures/ubiquitin/input/2dzi.pdb
-    ../figures/ubiquitin/input/1wx9.pdb
+    ./figures/ubiquitin/input/1ubq.pdb
+    ./figures/ubiquitin/input/1ndd.pdb
+    ./figures/ubiquitin/input/2n1v.pdb
+    ./figures/ubiquitin/input/2l7r.pdb
+    ./figures/ubiquitin/input/1z2m.pdb
+    ./figures/ubiquitin/input/1oqy.pdb
+    ./figures/ubiquitin/input/1p1a.pdb
+    ./figures/ubiquitin/input/2bwf.pdb
+    ./figures/ubiquitin/input/1yqb.pdb
+    ./figures/ubiquitin/input/4k95.pdb
+    ./figures/ubiquitin/input/1vcb.pdb
+    ./figures/ubiquitin/input/1wh3.pdb
+    ./figures/ubiquitin/input/2dzi.pdb
+    ./figures/ubiquitin/input/1wx9.pdb
 }  
 
 # name of fasta file ids corresponding to each pdb

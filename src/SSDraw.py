@@ -147,7 +147,7 @@ def build_loop(
         o = 0
     if next_ss == "B":
         o = -1.5
-    if next_ss is None:
+    if next_ss == None:
         o = -4.1
 
     rectangle = mpatch.Rectangle(
@@ -186,7 +186,7 @@ def build_strand(
     imagemat: int = 0,
     size: int = 75,
 ) -> None:
-    delta = 0 if next_ss is None else 1
+    delta = 0 if next_ss == None else 1
 
     arrow = mpatch.FancyArrow(
         ((strand[0] + delta - 1) / 6.0),
@@ -328,7 +328,7 @@ def SS_breakdown(
 
     SS_equivalencies = {
         "H": ["H"],
-        "-": ["-"],
+        "-": [],
         "S": [" ", "S", "C", "T", "G", "I", "P"],
         " ": [" ", "S", "C", "T", "G", "I", "P"],
         "C": [" ", "S", "C", "T", "G", "I", "P"],
@@ -340,10 +340,9 @@ def SS_breakdown(
         "B": ["E", "B"],
     }
 
-    cur_SSDict = {"H": "helix", "-": "break", "E": "strand", "B": "strand"}
+    cur_SSDict = {"H": "helix", "E": "strand", "B": "strand"}
 
     for i in range(len(ss)):
-
         if i == 0:
             curSS = SS_equivalencies[ss[i]]
             jstart = i
@@ -409,9 +408,7 @@ def SS_breakdown(
 
 def updateSS(ss: str, seq: str, alignment: str, ref_align: str) -> str:
     ss_u = ""
-
     j = 0
-
     for i in range(len(alignment)):
         if alignment[i] == "-":
             if ref_align[i] == "-":
@@ -520,7 +517,7 @@ def plot_coords(
             z = 10
         path = mpath.Path(np.array(coords_f1), np.array(instructions1))
         patch = mpatch.PathPatch(path, facecolor="none", ec="k", zorder=z)
-        if plot is not None:
+        if plot != None:
             plot.add_patch(patch)
         else:
             plt.gca().add_patch(patch)
@@ -549,7 +546,7 @@ def run_dssp(
 
     try:
         dssp = DSSP(model, pdb_path, dssp=dssp_exe)
-    except BaseException:
+    except:
         # use pydssp instead of dssp
         dssp_mode = "pydssp"
         import torch
@@ -649,7 +646,7 @@ def score_column(msa_col: T.List[str], threshold: int = 0) -> float:
     for i in msa_col:
         try:
             aa_count[i] += 1
-        except BaseException:
+        except:
             pass
     consensus_aa = max(zip(aa_count.values(), aa_count.keys()))[1]
 
@@ -729,7 +726,7 @@ def parse_color(
                 m = mview_colors[seq_wgaps[i]]
                 bvals.append(m)
                 mview_colors_hit[m] += 1
-            except BaseException:
+            except:
                 bvals.append(7)
 
         # remove colors of residues not in sequence
@@ -887,7 +884,7 @@ SSDraw requires the biopython module:
 SSDraw also requires the DSSP program to be installed in order to generate secondary structure annotations.
         sudo apt-get install dssp
 
-Alternatively, you can install DSSP either through conda (conda install -c salilab dssp), or you can follow the instructions on their github page to make a local installation:
+Alternatively, you can install DSSP either through conda (conda install -c salilab dssp), or you can follow the instructions on their github page to make a local installation: 
 https://github.com/cmbi/dssp.
 
 
@@ -901,11 +898,11 @@ SSDraw requires 4 arguments:
 
 Example 1:
     python3 ../SSDraw.py --fasta 1ndd.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_out
-
+        
 Coloring options:
 SSDraw uses a gradient to color each position in the alignment by a certain score. The user can choose which scoring system to use, and they can also choose which colormap.
 
-Scoring:
+Scoring: 
 -conservation_score: score each position in the alignment by conservation score.
 -bfactor: score each residue in the pdb by B-factor
 -scoring_file: score each residue by a custom scoring file prepared by the user
@@ -921,7 +918,7 @@ Choosing a colormap:
 The default colormap for SSDraw is inferno. The user can select one of the matplotlib library color maps or simply list a set of colors they'd like to use with the --color_map option. Alternatively, the user can select a single color with the --color option and SSDraw will use that color on the whole image.
 
 Example 4: Custom scoring file with custom color map
-    python3 ../SSDraw.py --fasta 2kdl.fasta --name 2kdl --pdb 2kdl.pdb --output 2kdl_out --scoring_file 2kdl_scoring.txt --color_map black cyan
+    python3 ../SSDraw.py --fasta 2kdl.fasta --name 2kdl --pdb 2kdl.pdb --output 2kdl_out --scoring_file 2kdl_scoring.txt --color_map black cyan  
 
 DSSP files:
 Normally, SSDraw will generate a DSSP annotation from the PDB file, but if you have a DSSP file you would like to use, you can upload it and input the file name in Options.
@@ -1047,7 +1044,7 @@ def initialize(
     T.List[str],
     T.List[T.Tuple[int, int]],
 ]:
-    if not args:
+    if args == None:
         args, parser = get_args()
 
     if not args.fasta or not args.pdb or not args.output or not args.name:
@@ -1075,7 +1072,7 @@ def initialize(
     if args.start > args.end:
         raise Exception("--start cannot be greater than --end")
 
-    # Align secondary structure to match input sequence alignment
+    #####Align secondary structure to match input sequence alignment
     ss_wgaps, seq_wgaps, extra_gaps, i_start, i_end = SS_align(
         salign, args.name, f[1], f[0], args.start, args.end
     )
@@ -1232,9 +1229,9 @@ def SSDraw(
             aa,
             ha="center",
             va="bottom",
-            fontsize=8,
+            fontsize=15,
             fontfamily="monospace",
-            color="red",
+            color="white",
         )
 
     plt.ylim([0.5, 3])

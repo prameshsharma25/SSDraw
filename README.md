@@ -99,3 +99,35 @@ python3 run_multiple_pdbs_on_one_msa.py --input [input script] --output [output 
 ```
 run_multiple_pdbs_on_one_msa.py will run SSDraw for multiple pdbs from a single multiple sequence alignment, saving the diagrams to a specified output directory. Finally, the script will create a composite stacked image of the diagrams. An example input script is shown in SSDraw/examples/example_run.txt.
 
+## Running with Docker
+
+You can use Docker to run SSDraw without installing dependencies on your system.
+
+### 1. Build the Docker image
+
+```sh
+docker build -t ssdraw-image .
+```
+
+### 2. Run SSDraw with your input files
+
+Make sure your input files (FASTA, PDB, etc.) are in your current directory.  
+Then run:
+
+```sh
+docker run --rm -v "$PWD":/app ssdraw-image --fasta your.fasta --name your_id --pdb your.pdb --output output_name
+```
+
+- Replace `your.fasta`, `your_id`, `your.pdb`, and `output_name` with your actual file names and sequence ID.
+- The output image will be saved in your current directory.
+
+#### Example
+
+```sh
+docker run --rm -v "$PWD":/app ssdraw-image --fasta examples/1ndd.fasta --name 1ndd --pdb examples/1ndd.pdb --output 1ndd_out
+```
+
+**Note:**  
+The `-v "$PWD":/app` option mounts your current directory into the container, so SSDraw can access your files and save outputs locally.  
+You can pass any SSDraw command-line options as usual after the image
+

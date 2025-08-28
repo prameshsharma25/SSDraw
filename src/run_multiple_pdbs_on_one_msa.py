@@ -7,19 +7,17 @@ To run, run the command
 An example input script is shown in "example_run.txt"
 """
 
-import sys
-import os
 import re
-from PIL import Image
+import sys
 import argparse
 import SSDraw
-from combine_images import combine_images
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-def SSDraw_layer(fastas, pdbs, names, output_names, output_dir, additional_params):
-
+def SSDraw_layer(
+    fastas, pdbs, names, output_names, output_dir, additional_params
+):
     nlines = len(pdbs)
 
     # Plot secondary structure chunks
@@ -143,10 +141,9 @@ def SSDraw_layer(fastas, pdbs, names, output_names, output_dir, additional_param
         if loop_coords[j][1][1] > maxsize:
             maxsize = loop_coords[j][1][1]
 
-    # fig, ax = plt.subplots(ncols=1, figsize=(sz*.7,(2+1.5*(nlines-1)*.7)))
-
-    fig, ax = plt.subplots(ncols=1, figsize=(sz * 0.7, ((maxsize - minsize) * 0.37)))
-    maxlen = max([len(x) for x in output_names])
+    fig, ax = plt.subplots(
+        ncols=1, figsize=(sz * 0.7, ((maxsize - minsize) * 0.37))
+    )
 
     for i in range(len(output_names)):
         ax.annotate(
@@ -192,7 +189,6 @@ def SSDraw_layer(fastas, pdbs, names, output_names, output_dir, additional_param
         ax.xaxis.set_ticks_position("top")
 
     ax.set_aspect(0.5)
-    # plt.tight_layout()
 
 
 def get_args():
@@ -277,8 +273,7 @@ def main():
              -i INPUT, --input INPUT
                         name of input script
              -o OUTPUT, --output OUTPUT
-                        name of output directory"""
-        )
+                        name of output directory""")
 
     args, parser = get_args()
 
@@ -293,7 +288,11 @@ def main():
         additional_params,
     )
 
-    print("Creating composite image {:}.{:}".format(args.output, output_file_type))
+    print(
+        "Creating composite image {:}.{:}".format(
+            args.output, output_file_type
+        )
+    )
     plt.savefig("{:}.{:}".format(args.output, output_file_type))
 
 

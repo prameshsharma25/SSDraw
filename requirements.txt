@@ -7,3 +7,4 @@ nomkl
 
 black
 flake8
+autopep8

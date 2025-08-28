@@ -67,7 +67,9 @@ def read_consurf_grad(input_file: str) -> T.Tuple[str, T.List[int]]:
 
 def check_consurf_file(file: str) -> T.Optional[str]:
     consurf_pattern = r"^\s*?\d+\s+(\w)\s+\S+\s+\S+\s+(\d)\S*\s+-?\d+.\d+,\s+-?\d+.\d+\s+\d,\d\s+\d+\/\d+\s+\S+"
-    r4s_pattern = r"^\s*?\d+\s+(\w)\s+(\S+)\s+\[\s*\S+,\s*\S+\]\s+\S+\s+\d+\/\d+"
+    r4s_pattern = (
+        r"^\s*?\d+\s+(\w)\s+(\S+)\s+\[\s*\S+,\s*\S+\]\s+\S+\s+\d+\/\d+"
+    )
     with open(file, "r") as f:
         for line in f:
             if re.match(consurf_pattern, line):
@@ -84,7 +86,7 @@ def gap_sequence(seq: T.Any, extra_gaps: T.List[int]) -> T.Any:
     new_seq = seq
     if extra_gaps[1] != 0:
         new_seq = new_seq[: -extra_gaps[1]]
-    return new_seq[extra_gaps[0] :]
+    return new_seq[extra_gaps[0]:]
 
 
 def NormalizeData(data: np.ndarray) -> np.ndarray:
@@ -94,7 +96,9 @@ def NormalizeData(data: np.ndarray) -> np.ndarray:
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
 
-def coords2path(coord_set1: T.List[T.Any]) -> T.Tuple[T.List[T.Any], T.List[int]]:
+def coords2path(
+    coord_set1: T.List[T.Any],
+) -> T.Tuple[T.List[T.Any], T.List[int]]:
     coords_f1 = []
     instructions1 = []
 
@@ -143,7 +147,7 @@ def build_loop(
         o = 0
     if next_ss == "B":
         o = -1.5
-    if next_ss == None:
+    if next_ss is None:
         o = -4.1
 
     rectangle = mpatch.Rectangle(
@@ -182,7 +186,7 @@ def build_strand(
     imagemat: int = 0,
     size: int = 75,
 ) -> None:
-    delta = 0 if next_ss == None else 1
+    delta = 0 if next_ss is None else 1
 
     arrow = mpatch.FancyArrow(
         ((strand[0] + delta - 1) / 6.0),
@@ -231,20 +235,44 @@ def build_helix(
     for j in range((l - 2) - 1):
         if j % 2 == 0:
             points = [
-                [i[0] / 6.0 + (1.0 + j) / 6, 0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (2.0 + j) / 6, 0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (3.0 + j) / 6, -0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (2.0 + j) / 6, -0.75 - 5.5 * idx - SPACING * ssidx],
+                [
+                    i[0] / 6.0 + (1.0 + j) / 6,
+                    0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (2.0 + j) / 6,
+                    0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (3.0 + j) / 6,
+                    -0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (2.0 + j) / 6,
+                    -0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
             ]
             coord_set1.append(points + [points[0]])
             # hlx = mpatch.Polygon(points,fc=bkg,zorder=z)
 
         else:
             points = [
-                [i[0] / 6.0 + (1.0 + j) / 6, -0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (2.0 + j) / 6, -0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (3.0 + j) / 6, 0.75 - 5.5 * idx - SPACING * ssidx],
-                [i[0] / 6.0 + (2.0 + j) / 6, 0.75 - 5.5 * idx - SPACING * ssidx],
+                [
+                    i[0] / 6.0 + (1.0 + j) / 6,
+                    -0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (2.0 + j) / 6,
+                    -0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (3.0 + j) / 6,
+                    0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
+                [
+                    i[0] / 6.0 + (2.0 + j) / 6,
+                    0.75 - 5.5 * idx - SPACING * ssidx,
+                ],
             ]
             coord_set2.append(points + [points[0]])
             # hlx = mpatch.Polygon(points,fc=clr,zorder=0)
@@ -398,7 +426,12 @@ def updateSS(ss: str, seq: str, alignment: str, ref_align: str) -> str:
 
 
 def SS_align(
-    alignment: T.List[str], ID: str, seq: str, ss: str, i_start: int, i_end: int
+    alignment: T.List[str],
+    ID: str,
+    seq: str,
+    ss: str,
+    i_start: int,
+    i_end: int,
 ) -> T.Tuple[str, str, T.List[int], int, int]:
     a_seq = ""
     seq_found = 0
@@ -452,7 +485,10 @@ def SS_align(
         else:
             break
 
-    extra_gaps = [new_aln_gaps[0] - a_seq_gaps[0], new_aln_gaps[1] - a_seq_gaps[1]]
+    extra_gaps = [
+        new_aln_gaps[0] - a_seq_gaps[0],
+        new_aln_gaps[1] - a_seq_gaps[1],
+    ]
 
     SS_updated = updateSS(ss, seq, a[0][0], a[0][1])
 
@@ -484,12 +520,16 @@ def plot_coords(
             z = 10
         path = mpath.Path(np.array(coords_f1), np.array(instructions1))
         patch = mpatch.PathPatch(path, facecolor="none", ec="k", zorder=z)
-        if plot != None:
+        if plot is not None:
             plot.add_patch(patch)
         else:
             plt.gca().add_patch(patch)
         im = plt.imshow(
-            mat, extent=[0.0, sz, ysz, 3], cmap=CMAP, interpolation="none", zorder=z
+            mat,
+            extent=[0.0, sz, ysz, 3],
+            cmap=CMAP,
+            interpolation="none",
+            zorder=z,
         )
         im.set_clip_path(patch)
 
@@ -509,7 +549,7 @@ def run_dssp(
 
     try:
         dssp = DSSP(model, pdb_path, dssp=dssp_exe)
-    except:
+    except BaseException:
         # use pydssp instead of dssp
         dssp_mode = "pydssp"
         import torch
@@ -609,7 +649,7 @@ def score_column(msa_col: T.List[str], threshold: int = 0) -> float:
     for i in msa_col:
         try:
             aa_count[i] += 1
-        except:
+        except BaseException:
             pass
     consensus_aa = max(zip(aa_count.values(), aa_count.keys()))[1]
 
@@ -689,7 +729,7 @@ def parse_color(
                 m = mview_colors[seq_wgaps[i]]
                 bvals.append(m)
                 mview_colors_hit[m] += 1
-            except:
+            except BaseException:
                 bvals.append(7)
 
         # remove colors of residues not in sequence
@@ -847,7 +887,7 @@ SSDraw requires the biopython module:
 SSDraw also requires the DSSP program to be installed in order to generate secondary structure annotations.
         sudo apt-get install dssp
 
-Alternatively, you can install DSSP either through conda (conda install -c salilab dssp), or you can follow the instructions on their github page to make a local installation: 
+Alternatively, you can install DSSP either through conda (conda install -c salilab dssp), or you can follow the instructions on their github page to make a local installation:
 https://github.com/cmbi/dssp.
 
 
@@ -861,11 +901,11 @@ SSDraw requires 4 arguments:
 
 Example 1:
     python3 ../SSDraw.py --fasta 1ndd.fasta --name 1ndd --pdb 1ndd.pdb --output 1ndd_out
-        
+
 Coloring options:
 SSDraw uses a gradient to color each position in the alignment by a certain score. The user can choose which scoring system to use, and they can also choose which colormap.
 
-Scoring: 
+Scoring:
 -conservation_score: score each position in the alignment by conservation score.
 -bfactor: score each residue in the pdb by B-factor
 -scoring_file: score each residue by a custom scoring file prepared by the user
@@ -881,7 +921,7 @@ Choosing a colormap:
 The default colormap for SSDraw is inferno. The user can select one of the matplotlib library color maps or simply list a set of colors they'd like to use with the --color_map option. Alternatively, the user can select a single color with the --color option and SSDraw will use that color on the whole image.
 
 Example 4: Custom scoring file with custom color map
-    python3 ../SSDraw.py --fasta 2kdl.fasta --name 2kdl --pdb 2kdl.pdb --output 2kdl_out --scoring_file 2kdl_scoring.txt --color_map black cyan  
+    python3 ../SSDraw.py --fasta 2kdl.fasta --name 2kdl --pdb 2kdl.pdb --output 2kdl_out --scoring_file 2kdl_scoring.txt --color_map black cyan
 
 DSSP files:
 Normally, SSDraw will generate a DSSP annotation from the PDB file, but if you have a DSSP file you would like to use, you can upload it and input the file name in Options.
@@ -908,20 +948,28 @@ def get_args(
         epilog="",
     )
     parser.add_argument(
-        "-f", "--fasta", help="(required) sequence/alignment file in fasta format"
+        "-f",
+        "--fasta",
+        help="(required) sequence/alignment file in fasta format",
     )
     parser.add_argument("-p", "--pdb", help="(required) pdb file")
     parser.add_argument(
-        "-n", "--name", help="(required) id of the protein in the alignment file"
+        "-n",
+        "--name",
+        help="(required) id of the protein in the alignment file",
     )
-    parser.add_argument("-o", "--output", help="(required) name for output file")
+    parser.add_argument(
+        "-o", "--output", help="(required) name for output file"
+    )
     parser.add_argument(
         "--SS",
         default=None,
         help="secondary structure annotation in DSSP or .horiz format. If this option is not provided, SSDraw will compute secondary structure from the given PDB file with DSSP.",
     )
     parser.add_argument(
-        "--chain_id", default="A", help="chain id to use in pdb. Defaults to chain A."
+        "--chain_id",
+        default="A",
+        help="chain id to use in pdb. Defaults to chain A.",
     )
     parser.add_argument(
         "--color_map",
@@ -930,7 +978,9 @@ def get_args(
         help="color map to use for heat map",
     )
     parser.add_argument(
-        "--scoring_file", default=None, help="custom scoring file for alignment"
+        "--scoring_file",
+        default=None,
+        help="custom scoring file for alignment",
     )
     parser.add_argument(
         "--color",
@@ -947,8 +997,12 @@ def get_args(
         default="png",
         help="output file type. Options: png, ps, eps, tif, svg",
     )
-    parser.add_argument("-bfactor", action="store_true", help="score by B-factor")
-    parser.add_argument("-mview", action="store_true", help="color by mview color map")
+    parser.add_argument(
+        "-bfactor", action="store_true", help="score by B-factor"
+    )
+    parser.add_argument(
+        "-mview", action="store_true", help="color by mview color map"
+    )
     parser.add_argument(
         "--dpi", default=600, type=int, help="dpi to use for final plot"
     )
@@ -993,7 +1047,7 @@ def initialize(
     T.List[str],
     T.List[T.Tuple[int, int]],
 ]:
-    if args == None:
+    if not args:
         args, parser = get_args()
 
     if not args.fasta or not args.pdb or not args.output or not args.name:
@@ -1021,7 +1075,7 @@ def initialize(
     if args.start > args.end:
         raise Exception("--start cannot be greater than --end")
 
-    #####Align secondary structure to match input sequence alignment
+    # Align secondary structure to match input sequence alignment
     ss_wgaps, seq_wgaps, extra_gaps, i_start, i_end = SS_align(
         salign, args.name, f[1], f[0], args.start, args.end
     )
@@ -1078,7 +1132,9 @@ def SSDraw(
     nlines = 1
 
     # Parse color and scoring args
-    CMAP, bvals = parse_color(args, seq_wgaps, pdbseq, bfactors, msa, extra_gaps)
+    CMAP, bvals = parse_color(
+        args, seq_wgaps, pdbseq, bfactors, msa, extra_gaps
+    )
 
     mat = np.tile(NormalizeData(bvals), (100, 1))
 
@@ -1161,7 +1217,10 @@ def SSDraw(
             )
 
     plot_coords(
-        [loop_coords, helix_coords2, strand_coords, helix_coords1], mat, sz, CMAP
+        [loop_coords, helix_coords2, strand_coords, helix_coords1],
+        mat,
+        sz,
+        CMAP,
     )
 
     seq_to_show = seq_wgaps
@@ -1175,7 +1234,7 @@ def SSDraw(
             va="bottom",
             fontsize=8,
             fontfamily="monospace",
-            color="red"
+            color="red",
         )
 
     plt.ylim([0.5, 3])
@@ -1205,7 +1264,11 @@ def SSDraw(
 
     ax.set_aspect(0.5)
 
-    print("Saving output to {:}.{:}...".format(args.output, args.output_file_type))
+    print(
+        "Saving output to {:}.{:}...".format(
+            args.output, args.output_file_type
+        )
+    )
     plt.savefig(
         args.output + "." + args.output_file_type,
         bbox_inches="tight",

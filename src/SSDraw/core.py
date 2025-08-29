@@ -887,8 +887,8 @@ def initialize(
     T.List[str],
     T.List[T.Tuple[int, int]],
 ]:
-    # preface run
     id = args.name
+
     chain_id = args.chain_id
     print("\nRunning for: " + id)
 

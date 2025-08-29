@@ -10,9 +10,9 @@ An example input script is shown in "example_run.txt"
 import re
 import sys
 import argparse
-import SSDraw
 import numpy as np
 import matplotlib.pyplot as plt
+import SSDraw.core as SSDraw
 
 
 def SSDraw_layer(
@@ -32,10 +32,40 @@ def SSDraw_layer(
     loop_ys = []
 
     for i in range(len(pdbs)):
-        additional_params += (
-            f" -f {fastas[0]} -p {pdbs[i]} -n {names[i]} -o {output_names[i]}"
-        )
-        args, parser = SSDraw.get_args(args=additional_params.split())
+        arglist = [
+            "-f",
+            fastas[0],
+            "-p",
+            pdbs[i],
+            "-n",
+            names[i],
+            "-o",
+            output_names[i],
+        ] + additional_params.split()
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-f", "--fasta")
+        parser.add_argument("-p", "--pdb")
+        parser.add_argument("-n", "--name")
+        parser.add_argument("-o", "--output")
+        parser.add_argument("--SS", default=None)
+        parser.add_argument("--chain_id", default="A")
+        parser.add_argument("--color_map", default=["inferno"], nargs="*")
+        parser.add_argument("--scoring_file", default=None)
+        parser.add_argument("--color", default="white")
+        parser.add_argument("-conservation_score", action="store_true")
+        parser.add_argument("--output_file_type", default="png")
+        parser.add_argument("-bfactor", action="store_true")
+        parser.add_argument("-mview", action="store_true")
+        parser.add_argument("--dpi", type=int, default=600)
+        parser.add_argument("--ticks", type=int, default=0)
+        parser.add_argument("--start", type=int, default=0)
+        parser.add_argument("--end", type=int, default=0)
+        parser.add_argument("--dssp_exe", default="mkdssp")
+        parser.add_argument("--consurf", default="")
+
+        args = parser.parse_args(arglist)
+
         (
             args,
             pdbseq,
@@ -52,7 +82,7 @@ def SSDraw_layer(
             ss_break,
             ss_order,
             ss_bounds,
-        ) = SSDraw.initialize(args, parser)
+        ) = SSDraw.initialize(args)
 
         # Parse color and scoring args
         CMAP, bvals = SSDraw.parse_color(
@@ -191,22 +221,7 @@ def SSDraw_layer(
     ax.set_aspect(0.5)
 
 
-def get_args():
-    parser_description = "A helper script to run SSDraw for multiple PDBs from a single multiple sequence alignment."
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=parser_description,
-        epilog="",
-    )
-    parser.add_argument("-i", "--input", help="name of input script")
-    parser.add_argument("-o", "--output", help="name of output directory")
-
-    args = parser.parse_args()
-    return args, parser
-
-
 def parse_params(args):
-
     ssdraw_params = {
         "FASTA": [],
         "PDB": [],
@@ -260,24 +275,7 @@ def parse_params(args):
     return ssdraw_params, additional_params, output_file_type
 
 
-def main():
-
-    if len(sys.argv) < 3:
-        sys.exit(
-            """usage: run_multiple_pdbs_on_one_msa.py [-h] [-i INPUT] [-o OUTPUT]
-
-        A helper script to run SSDraw for multiple PDBs from a single multiple sequence alignment.
-
-        options:
-             -h, --help            show this help message and exit
-             -i INPUT, --input INPUT
-                        name of input script
-             -o OUTPUT, --output OUTPUT
-                        name of output directory"""
-        )
-
-    args, parser = get_args()
-
+def run_multiple_pdbs_on_one_msa(args):
     ssdraw_params, additional_params, output_file_type = parse_params(args)
 
     SSDraw_layer(
@@ -295,7 +293,3 @@ def main():
         )
     )
     plt.savefig("{:}.{:}".format(args.output, output_file_type))
-
-
-if __name__ == "__main__":
-    main()

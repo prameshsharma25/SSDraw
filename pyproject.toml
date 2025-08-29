@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "SSDraw"
-version = "0.1.6"
+version = "0.1.7"
 description = "Tool for creating publication-quality protein secondary structure diagrams"
 authors = [
     {name = "Ethan Chen"},
@@ -26,4 +26,4 @@ dependencies = [
 ssdraw = "SSDraw.cli:main"
 
 [tool.setuptools.package-data]
-"SSDraw" = ["LICENSE.md", "README.md"]
+"SSDraw" = ["LICENSE.md", "README.md", "imgs/*"]

@@ -216,7 +216,6 @@ def build_helix(
     bkg: T.Tuple[float, float, float] = (0.195, 0, 0.051),
     imagemat: int = 0,
 ) -> None:
-
     i = helix
     l = i[1] - i[0] + 1
     points = [
@@ -276,7 +275,6 @@ def build_helix(
             # hlx = mpatch.Polygon(points,fc=clr,zorder=0)
 
     if (l - 2 - 1) % 2 == 1:
-
         points = [
             [i[1] / 6.0 - 1.0 / 6, -0.75 - 5.5 * idx - SPACING * ssidx],
             [i[1] / 6.0, -0.75 - 5.5 * idx - SPACING * ssidx],
@@ -437,7 +435,6 @@ def SS_align(
     seq_found = 0
 
     for i in alignment:
-
         if seq_found and i[0] == ">":
             break
 
@@ -507,7 +504,6 @@ def plot_coords(
     ysz: float = 0.5,
 ) -> None:
     for i, coords in enumerate(coords_all):
-
         if not coords:
             continue
 
@@ -566,9 +562,9 @@ def run_dssp(
                 for residue in chain:
                     for atom in residue:
                         if atom.name in atom_indices:
-                            coords[r_idx][atom_indices.index(atom.name)] = (
-                                torch.from_numpy(atom.coord)
-                            )
+                            coords[r_idx][
+                                atom_indices.index(atom.name)
+                            ] = torch.from_numpy(atom.coord)
                     aa_seq += seq1(residue.get_resname())
                     r_idx += 1
 
@@ -980,7 +976,6 @@ def SSDraw(
     # set sizes of SS chunks
     ss_prev = 0
     for i in range(len(ss_order)):
-
         if ss_order[i] == "H":
             ss_prev = ss_bounds[i][1] / 6.0 + 1 / 6.0
         else:

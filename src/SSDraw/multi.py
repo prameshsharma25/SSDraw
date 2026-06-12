@@ -97,7 +97,6 @@ def SSDraw_layer(fastas, pdbs, names, output_names, output_dir, additional_param
         # set sizes of SS chunks
         ss_prev = 0
         for j in range(len(ss_order)):
-
             if ss_order[j] == "H":
                 ss_prev = ss_bounds[j][1] / 6.0 + 1 / 6.0
             else:
@@ -162,7 +161,6 @@ def SSDraw_layer(fastas, pdbs, names, output_names, output_dir, additional_param
         loop_ys.append(loop_coords[-1][0][1])
 
     for j in range(len(loop_coords)):
-
         if loop_coords[j][0][1] < minsize:
             minsize = loop_coords[j][0][1]
 
@@ -236,7 +234,6 @@ def parse_params(args):
         words = line.split()
 
         if len(words) > 0:
-
             if words[0] in ssdraw_params.keys():
                 current_param = words[0]
                 continue

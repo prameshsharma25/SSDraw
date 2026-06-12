@@ -12,7 +12,9 @@ The easiest way to install SSDraw is via pip:
 pip install SSDraw
 ```
 
-You can find the package on PyPi [here](https://pypi.org/project/SSDraw/)
+You can find the package on PyPi [here](https://pypi.org/project/SSDraw/).
+
+And, extended SSDraw docs can be found [here](https://prameshsharma25.github.io/SSDraw/).
 
 ## Instructions
 SSDraw provides two subcommands:

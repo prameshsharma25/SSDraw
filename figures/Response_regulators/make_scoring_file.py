@@ -42,12 +42,10 @@ aa3to1 = {
 }
 
 if __name__ == "__main__":
-
     f = open(sys.argv[1])
     startone = int(sys.argv[2])
 
     for i, l in enumerate(f):
-
         if l[:4] == "ATOM":
             if i > startone:
                 print(aa3to1[l[17:20]], 1)

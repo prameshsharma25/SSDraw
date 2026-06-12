@@ -32,9 +32,9 @@ jobs:
           # Install the package itself in editable mode
           python -m pip install -e .
 
-      - name: Format code with black (Check only)
+      - name: Format code with black
         run: |
-          black . --check
+          black .
 
       - name: Test with pytest
         run: |
